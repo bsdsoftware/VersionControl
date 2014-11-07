@@ -15,7 +15,7 @@
  */
 @property (nonatomic, readonly) NSString *currentVersion;
 
-typedef void(^VersionBlock)();
+typedef void(^VersionBlock)(BOOL isNewInstall);
 
 /**
  *  Esegue il blocco di codice specificato per una specifica versione.

@@ -12,6 +12,7 @@
 @interface VersionControl ()
 
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
+@property (nonatomic, assign, getter=isNewInstall) BOOL newInstall;
 
 @end
 
@@ -23,6 +24,7 @@ NSString *const VersionControlVersionKey = @"VersionControlVersionKey";
 	self = [super init];
 	if (self) {
 		self.userDefaults = [NSUserDefaults standardUserDefaults];
+		self.newInstall = ([self.userDefaults objectForKey:VersionControlVersionKey] == nil);
 		_currentVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
 #if DEBUG
 		NSLog(@"VersionControl: versione %@", _currentVersion);
@@ -33,7 +35,7 @@ NSString *const VersionControlVersionKey = @"VersionControlVersionKey";
 
 - (void)executeBlock:(VersionBlock)block forVersion:(NSString *)version {
 	if ([self shouldExecuteBlockForVersion:version]) {
-		block();
+		block(self.isNewInstall);
 		[self.userDefaults setObject:_currentVersion forKey:VersionControlVersionKey];
 		[self.userDefaults synchronize];
 	}
